@@ -1,0 +1,15 @@
+1) Multiple user assigned to same card
+Solution: Provide point division interface. By default point will be divided equally
+
+2) Multiple sprint label on same card
+-- Might be really difficult to handle as there will be many other label to card other then the sprint label
+
+Solution:
+Maintain all the label starting with word 'Sprint' and keep track of ticket expanding two sprint
+Add sprintwise point division interface for card having to sprint label
+
+3) How to decide which tickets are in WIP(This can be left out though as it is not required for calculation)
+Solution: ............
+
+4) Pulling data regularly
+Solution: Provide button to pull data manually. Also save previously generated status report  in db
