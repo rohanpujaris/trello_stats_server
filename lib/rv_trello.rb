@@ -13,6 +13,22 @@ class RvTrello
     def members
       @members ||= board.members
     end
+
+    def labels
+      @labels ||= board.labels
+    end
+
+    def sprint_labels
+      @sprint_labels ||= labels.select {|l| l.name.starts_with?('Sprint')}
+    end
+
+    def lists
+      @lists ||= board.lists
+    end
+
+    def cards
+      @cards ||= board.cards
+    end
   end
 end
 
