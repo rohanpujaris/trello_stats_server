@@ -8,6 +8,9 @@ Solution:
 Maintain all the label starting with word 'Sprint' and keep track of ticket expanding two sprint
 Add sprintwise point division interface for card having to sprint label
 
+Card expanding multiple spring will be avoided in first increment as it is difficult to do.
+Also we need to thing of card expanding multiple sprint having multiple members
+
 3) How to decide which tickets are in WIP(This can be left out though as it is not required for calculation)
 Solution: ............
 

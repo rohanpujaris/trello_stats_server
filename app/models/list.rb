@@ -1,6 +1,8 @@
 class List < ActiveRecord::Base
   has_many :cards
 
+  as_enum :category, doing: 0, in_qa: 1, qa_pass: 2, accepted: 3
+
   class << self
     def save_lists_to_db
       RvTrello.lists.each do |trello_list|
@@ -8,6 +10,10 @@ class List < ActiveRecord::Base
           list.name = trello_list.name
         end
       end
+    end
+
+    List.categories.hash.each do |name, id|
+      List.define_singleton_method(name) { find_by(category_cd: id) }
     end
   end
 end
