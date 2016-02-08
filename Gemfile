@@ -1,5 +1,6 @@
 source 'https://rubygems.org'
 
+gem 'active_model_serializers'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.2'
@@ -23,6 +24,7 @@ gem 'jbuilder', '~> 2.0'
 
 gem 'pg'
 
+gem 'rack-cors', :require => 'rack/cors'
 gem 'ruby-trello'
 
 # bundle exec rake doc:rails generates the API under doc/api.

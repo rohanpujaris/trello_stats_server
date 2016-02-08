@@ -20,6 +20,8 @@ GEM
       erubis (~> 2.7.0)
       rails-dom-testing (~> 1.0, >= 1.0.5)
       rails-html-sanitizer (~> 1.0, >= 1.0.1)
+    active_model_serializers (0.9.4)
+      activemodel (>= 3.2)
     activejob (4.2.2)
       activesupport (= 4.2.2)
       globalid (>= 0.3.0)
@@ -82,6 +84,7 @@ GEM
     oauth (0.4.7)
     pg (0.18.4)
     rack (1.6.4)
+    rack-cors (0.4.0)
     rack-test (0.6.3)
       rack (>= 1.0)
     rails (4.2.2)
@@ -165,11 +168,13 @@ PLATFORMS
   ruby
 
 DEPENDENCIES
+  active_model_serializers
   byebug
   coffee-rails (~> 4.1.0)
   jbuilder (~> 2.0)
   jquery-rails
   pg
+  rack-cors
   rails (= 4.2.2)
   ruby-trello
   sass-rails (~> 5.0)
