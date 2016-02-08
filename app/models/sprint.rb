@@ -1,4 +1,6 @@
 class Sprint < ActiveRecord::Base
+  SPRINT_DURATION = 10
+
   has_one :sprint
   has_many :cards
   has_many :point_stats

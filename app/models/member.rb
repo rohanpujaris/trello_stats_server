@@ -23,7 +23,8 @@ class Member < ActiveRecord::Base
     card_members.current_sprint_cards.each do |cm|
       ['doing', 'in_qa', 'qa_pass', 'accepted'].each do |state|
         if cm.card.list.send("#{state}?")
-          points_hash[state.to_sym] = cm.individuals_point
+          points_hash[state.to_sym] += cm.individuals_point
+          break;
         end
       end
     end
@@ -33,9 +34,17 @@ class Member < ActiveRecord::Base
   def expected_points_for_current_sprint
     points = expected_points.to_i
     if points > 0
-      points = points - Holiday.holidays_in_current_sprint - current_sprint_leaves
+      points = points - total_non_working_day_points
     end
     points
+  end
+
+  def total_non_working_day_points
+    (Holiday.holidays_in_current_sprint + current_sprint_leaves) * expected_points_per_day
+  end
+
+  def expected_points_per_day
+    expected_points / Sprint::SPRINT_DURATION
   end
 
   def current_sprint_leaves
