@@ -45,8 +45,11 @@ class Card < ActiveRecord::Base
       trello_list = Trello::List.find(list_id)
       create_list(trello_id: trello_list.id, name: trello_list.name)
     elsif list.trello_id  != list_id
-      trello_list = Trello::List.find(list_id)
-      list.update_attributes(trello_id: list_id)
+      card_list = List.find_or_create_by(trello_id: list_id) do |l|
+        trello_list = Trello::List.find(list_id)
+        l.name = trello_list.name
+      end
+      update_attributes(list_id: card_list.id)
     end
   end
 

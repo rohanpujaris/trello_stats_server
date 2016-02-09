@@ -72,15 +72,6 @@ ActiveRecord::Schema.define(version: 20160208131341) do
 
   add_index "member_leaves", ["member_id"], name: "index_member_leaves_on_member_id", using: :btree
 
-  create_table "member_sprint_leaves", force: :cascade do |t|
-    t.integer "sprint_id"
-    t.integer "member_id"
-    t.date    "leave_date"
-  end
-
-  add_index "member_sprint_leaves", ["member_id"], name: "index_member_sprint_leaves_on_member_id", using: :btree
-  add_index "member_sprint_leaves", ["sprint_id"], name: "index_member_sprint_leaves_on_sprint_id", using: :btree
-
   create_table "members", force: :cascade do |t|
     t.string   "full_name"
     t.string   "user_name"
@@ -88,7 +79,7 @@ ActiveRecord::Schema.define(version: 20160208131341) do
     t.datetime "created_at",      null: false
     t.datetime "updated_at",      null: false
     t.integer  "job_profile_cd"
-    t.integer  "expected_poinst"
+    t.integer  "expected_points"
   end
 
   create_table "point_stats", force: :cascade do |t|
@@ -107,8 +98,9 @@ ActiveRecord::Schema.define(version: 20160208131341) do
   create_table "sprints", force: :cascade do |t|
     t.string   "name"
     t.string   "trello_id"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",                     null: false
+    t.datetime "updated_at",                     null: false
+    t.boolean  "current_sprint", default: false
     t.date     "start_date"
     t.date     "end_date"
   end
@@ -119,8 +111,6 @@ ActiveRecord::Schema.define(version: 20160208131341) do
   add_foreign_key "card_sprints", "sprints"
   add_foreign_key "cards", "lists"
   add_foreign_key "member_leaves", "members"
-  add_foreign_key "member_sprint_leaves", "members"
-  add_foreign_key "member_sprint_leaves", "sprints"
   add_foreign_key "point_stats", "members"
   add_foreign_key "point_stats", "sprints"
 end
