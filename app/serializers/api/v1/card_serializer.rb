@@ -3,11 +3,6 @@ module Api::V1
     # embed :ids, embed_in_root: true
     attributes :id, :name
 
-    has_many :card_members
-    has_many :assigned_developers, key: :members
-
-    class MemberSerializer < ActiveModel::Serializer
-      attributes :id, :user_name, :full_name
-    end
+    has_many :member_developers, key: 'card_members'
   end
 end
