@@ -6,6 +6,8 @@ class Member < ActiveRecord::Base
 
   as_enum :job_profile, developer: 0, tester: 1, others: 2
 
+  scope :id_equals, -> (member_ids) { where(id: member_ids) }
+
   class << self
     def save_member_to_db
       board.members.each do |trello_member|

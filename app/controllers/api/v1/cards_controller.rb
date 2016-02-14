@@ -1,9 +1,15 @@
 module Api::V1
   class CardsController < BaseApiController
     def index
-      render json: Card.limit(CARDS_PER_PAGE).offset(get_page_offset)
-        .includes(member_developers: :member),
-        include: '**', each_serializer: Api::V1::CardSerializer
+      cards = Card.limit(CARDS_PER_PAGE).offset(get_page_offset)
+        .eager_load(:members, { card_member_having_developer: :member })
+      if params[:search].present?
+        cards = cards.name_like(params[:search])
+      end
+      cards = Card.filter_results(cards, params.slice(*Card::FILTER_PARAMS))
+      render json: cards, include: '**',
+        each_serializer: Api::V1::CardSerializer,
+        meta: { total_count: cards.count, filters: Card.filters }
     end
 
     private
