@@ -4,7 +4,7 @@ class List < ActiveRecord::Base
   as_enum :category, doing: 0, in_qa: 1, qa_pass: 2, accepted: 3
 
   class << self
-    def save_lists_to_db
+    def pull_lists
       RvTrello.lists.each do |trello_list|
         find_or_create_by(trello_id: trello_list.id) do |list|
           list.name = trello_list.name

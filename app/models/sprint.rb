@@ -9,7 +9,7 @@ class Sprint < ActiveRecord::Base
   # has_many :cards, through: :card_sprints
 
   class << self
-    def save_sprints_to_db
+    def pull_sprints
       RvTrello.sprint_labels.each do |label|
         find_or_create_by(trello_id: label.id) do |sprint|
           sprint.name = label.name
