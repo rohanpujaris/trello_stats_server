@@ -1,0 +1,1 @@
+ActiveRecord::Base.send(:include, Extension::ActiveRecord::Base)
