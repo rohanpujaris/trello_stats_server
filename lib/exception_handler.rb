@@ -1,7 +1,7 @@
 class ExceptionHandler
   DEFAULT_RETRY_COUNT = 3
   MESSAGE_AFTER_RETRY_COMPLETED = 'There is a shitty exception man. Please check and correct your code'
-  DECORATOR = "="*80
+  DECORATOR = "\n" + "="*80 + "\n"
 
   class << self
     def retry_if_expection(retry_count = 3, &block)
