@@ -7,7 +7,7 @@ module Api::V1
 
     def update
       sprint = Sprint.find(params[:data][:id])
-      if sprint.update_attributes(sprint_params) && false
+      if sprint.update_attributes(sprint_params)
         render json: sprint, serializer: Api::V1::SprintSerializer
       else
         render json: sprint.json_api_format_errors, status: 422
