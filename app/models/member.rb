@@ -8,6 +8,8 @@ class Member < ActiveRecord::Base
 
   scope :id_equals, -> (member_ids) { where(id: member_ids) }
 
+  default_scope { order(:full_name) }
+
   class << self
     def save_member_to_db
       board.members.each do |trello_member|
