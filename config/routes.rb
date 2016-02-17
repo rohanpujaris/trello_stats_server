@@ -5,6 +5,7 @@ Rails.application.routes.draw do
       resources :members
       resources :cards
       resources :card_members
+      resources :sprints
     end
   end
 end
