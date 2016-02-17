@@ -8,6 +8,8 @@ class Sprint < ActiveRecord::Base
   # has_many :card_sprints
   # has_many :cards, through: :card_sprints
 
+  default_scope { order(:start_date) }
+
   class << self
     def pull_sprints
       RvTrello.sprint_labels.each do |label|
