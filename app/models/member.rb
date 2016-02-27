@@ -26,7 +26,7 @@ class Member < ActiveRecord::Base
       doing: 0, in_qa: 0, qa_pass: 0, accepted: 0}
     card_members.current_sprint_cards.each do |cm|
       ['doing', 'in_qa', 'qa_pass', 'accepted'].each do |state|
-        if cm.card.list.send("#{state}?")
+        if cm.card.send("#{state}?")
           points_hash[state.to_sym] += cm.individuals_point
           break;
         end

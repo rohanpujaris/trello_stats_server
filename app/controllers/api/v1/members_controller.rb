@@ -1,12 +1,16 @@
 module Api::V1
   class MembersController < BaseApiController
     def index
-      serializer = if params[:point_stats] == 'true'
-        Api::V1::MemberSerializer
+      if params[:point_stats] == 'true'
+        data = Member.developers
+        serializer = Api::V1::MemberSerializer
+        meta = {}
       else
-        Api::V1::MemberWithoutPointsSerializer
+        data = Member.all
+        serializer = Api::V1::MemberWithoutPointsSerializer
+        meta = { job_profiles: Member.job_profiles.hash }
       end
-      render json: Member.developers, each_serializer: serializer
+      render json: data, each_serializer: serializer, meta: meta
     end
 
     def update
@@ -21,7 +25,8 @@ module Api::V1
     private
 
     def member_params
-      params.require(:data).permit(attributes: [:full_name, :user_name, :expected_points])
+      params.require(:data).permit(attributes:
+        [:full_name, :user_name, :expected_points, :job_profile])
     end
   end
 end
