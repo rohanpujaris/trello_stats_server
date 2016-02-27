@@ -1,3 +1,6 @@
+# TODO: Remove all methods which doesn't belongs here to a seprate module
+# Example of methods to be moved: points_partion_array, get_points_from_name etc
+
 class Card < ActiveRecord::Base
   FILTER_PARAMS = ['list_ids', 'sprint_ids', 'member_ids']
 
@@ -54,8 +57,7 @@ class Card < ActiveRecord::Base
   end
 
   def save_or_update_sprint(card_labels)
-    sprint_label = card_labels.find {|l| l['name'].starts_with?('Sprint')}
-    if sprint_label
+    if sprint_label = get_highest_number_sprint(card_labels)
       self.sprint = Sprint.find_or_create_by(trello_id: sprint_label['id']) do |s|
         s.name = sprint_label['name']
       end
@@ -127,5 +129,20 @@ class Card < ActiveRecord::Base
     division = (0...member_counts).map {|i| points / member_counts }
     (0...points%member_counts).each {|i| division[0] += 1}
     division
+  end
+
+  def get_highest_number_sprint(card_labels)
+    sprint_label = nil
+    # if there are multiple sprint label per card, then select the sprint with biggest number
+    # eg: If card A has label 'Sprint #13' and 'Sprint 14', then card will be considered
+    # as Sprint #14 card
+    card_labels.each do |l|
+      if l['name'].starts_with?('Sprint')
+        if sprint_label.nil? || l['name'][/\d+/].to_i > sprint_label['name'][/\d+/].to_i
+          sprint_label =  l
+        end
+      end
+    end
+    sprint_label
   end
 end

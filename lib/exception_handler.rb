@@ -47,6 +47,7 @@ class ExceptionHandler
         yield
       elsif e
         Rails.logger.fatal e.message
+        Rails.logger.fatal e.backtrace
         details.each do |k, v|
           Rails.logger.fatal "#{k} : #{v.respond_to?(:inspect) ? v.inspect : v }"
         end
