@@ -1,8 +1,5 @@
 module Api::V1
   class CardMembersController < BaseApiController
-    def index
-    end
-
     def update
       card_member = CardMember.find(params[:data][:id])
       if card_member.update_attributes(card_memmbers_params)
