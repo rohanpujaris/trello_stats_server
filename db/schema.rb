@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160214124513) do
+ActiveRecord::Schema.define(version: 20160228163130) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -53,6 +53,22 @@ ActiveRecord::Schema.define(version: 20160214124513) do
   add_index "cards", ["list_id"], name: "index_cards_on_list_id", using: :btree
   add_index "cards", ["sprint_id"], name: "index_cards_on_sprint_id", using: :btree
 
+  create_table "delayed_jobs", force: :cascade do |t|
+    t.integer  "priority",   default: 0, null: false
+    t.integer  "attempts",   default: 0, null: false
+    t.text     "handler",                null: false
+    t.text     "last_error"
+    t.datetime "run_at"
+    t.datetime "locked_at"
+    t.datetime "failed_at"
+    t.string   "locked_by"
+    t.string   "queue"
+    t.datetime "created_at"
+    t.datetime "updated_at"
+  end
+
+  add_index "delayed_jobs", ["priority", "run_at"], name: "delayed_jobs_priority", using: :btree
+
   create_table "holidays", force: :cascade do |t|
     t.string "name"
     t.date   "date"
@@ -72,6 +88,15 @@ ActiveRecord::Schema.define(version: 20160214124513) do
   end
 
   add_index "member_leaves", ["member_id"], name: "index_member_leaves_on_member_id", using: :btree
+
+  create_table "member_sprint_leaves", force: :cascade do |t|
+    t.integer "sprint_id"
+    t.integer "member_id"
+    t.date    "leave_date"
+  end
+
+  add_index "member_sprint_leaves", ["member_id"], name: "index_member_sprint_leaves_on_member_id", using: :btree
+  add_index "member_sprint_leaves", ["sprint_id"], name: "index_member_sprint_leaves_on_sprint_id", using: :btree
 
   create_table "members", force: :cascade do |t|
     t.string   "full_name"
@@ -99,9 +124,8 @@ ActiveRecord::Schema.define(version: 20160214124513) do
   create_table "sprints", force: :cascade do |t|
     t.string   "name"
     t.string   "trello_id"
-    t.datetime "created_at",                     null: false
-    t.datetime "updated_at",                     null: false
-    t.boolean  "current_sprint", default: false
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
     t.date     "start_date"
     t.date     "end_date"
   end
@@ -112,6 +136,8 @@ ActiveRecord::Schema.define(version: 20160214124513) do
   add_foreign_key "card_sprints", "sprints"
   add_foreign_key "cards", "lists"
   add_foreign_key "member_leaves", "members"
+  add_foreign_key "member_sprint_leaves", "members"
+  add_foreign_key "member_sprint_leaves", "sprints"
   add_foreign_key "point_stats", "members"
   add_foreign_key "point_stats", "sprints"
 end
