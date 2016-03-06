@@ -3,6 +3,7 @@ source 'https://rubygems.org'
 gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git'
 gem 'daemons'
 gem 'delayed_job_active_record'
+gem 'devise_token_auth'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.2'
@@ -23,6 +24,8 @@ gem 'jquery-rails'
 gem 'turbolinks'
 # Build JSON APIs with ease. Read more: https://github.com/rails/jbuilder
 gem 'jbuilder', '~> 2.0'
+
+gem 'omniauth'
 
 gem 'pg'
 

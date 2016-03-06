@@ -1,4 +1,5 @@
 Rails.application.routes.draw do
+  mount_devise_token_auth_for "User", at: "auth"
 
   namespace :api, defaults: { format: "json" }  do
     namespace :v1 do
@@ -8,7 +9,9 @@ Rails.application.routes.draw do
       resources :sprints, only: [:index, :update]
       resources :lists, only: [:index, :update]
 
-      get 'pull_all_data_from_trello', to: 'pull_trello_data#pull_all_data'
+      get "pull_all_data_from_trello", to: "pull_trello_data#pull_all_data"
+      get "authenticate", to: "trello_auth#authenticate"
+      get "logout", to: "trello_auth#logout"
     end
   end
 end

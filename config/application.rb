@@ -30,13 +30,16 @@ module TrelloStatsServer
       Rails.root.join('lib/extension')
     ]
 
-    config.middleware.insert_before 0, "Rack::Cors" do
+    config.middleware.insert_before 0, "Rack::Cors",
+      logger: (-> { Rails.logger }) do
       allow do
         origins '*'
-        resource '*', :headers => :any,
-        methods: [:get, :post, :put, :patch, :delete, :options, :head],
-        max_age: 50000
+        resource '*',
+          headers: :any,
+          expose: ['access-token', 'expiry', 'token-type', 'uid', 'client'],
+          methods: [:get, :post, :put, :patch, :delete, :options, :head],
+          max_age: 50000
       end
-   end
+    end
   end
 end
