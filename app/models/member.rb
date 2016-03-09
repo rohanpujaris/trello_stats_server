@@ -1,11 +1,12 @@
 class Member < ActiveRecord::Base
+  as_enum :job_profile, developer: 0, tester: 1, others: 2
+
   has_one  :user
   has_many :card_members
   has_many :cards, through: :card_members
   has_many :point_stats
   has_many :member_leaves, class_name: 'MemberLeave'
 
-  as_enum :job_profile, developer: 0, tester: 1, others: 2
 
   scope :id_equals, -> (member_ids) { where(id: member_ids) }
 

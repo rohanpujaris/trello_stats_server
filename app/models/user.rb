@@ -6,4 +6,9 @@ class User < ActiveRecord::Base
   include DeviseTokenAuth::Concerns::User
 
   belongs_to :member
+  has_many :sync_records
+
+  def create_sync_record(sync_type)
+    sync_records.create(category: sync_type, synced_time: Time.now)
+  end
 end
