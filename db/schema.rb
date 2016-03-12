@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160306164415) do
+ActiveRecord::Schema.define(version: 20160312073239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -130,6 +130,17 @@ ActiveRecord::Schema.define(version: 20160306164415) do
     t.date     "end_date"
   end
 
+  create_table "sync_records", force: :cascade do |t|
+    t.time     "sync_end_time"
+    t.integer  "user_id"
+    t.integer  "sync_type_cd",    default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.time     "sync_start_time"
+  end
+
+  add_index "sync_records", ["user_id"], name: "index_sync_records_on_user_id", using: :btree
+
   create_table "users", force: :cascade do |t|
     t.string   "provider",               default: "email", null: false
     t.string   "uid",                    default: "",      null: false
@@ -171,4 +182,5 @@ ActiveRecord::Schema.define(version: 20160306164415) do
   add_foreign_key "member_sprint_leaves", "sprints"
   add_foreign_key "point_stats", "members"
   add_foreign_key "point_stats", "sprints"
+  add_foreign_key "sync_records", "users"
 end

@@ -1,4 +1,6 @@
 class List < ActiveRecord::Base
+  as_enum :category, doing: 0, in_qa: 1, qa_pass: 2, accepted: 3
+
   CATEGORY_DISPLAY_NAME = {
     "doing" => "Doing",
     "in_qa" => "In QA",
@@ -6,11 +8,13 @@ class List < ActiveRecord::Base
     "accepted" => "Accepted"
   }
 
-  as_enum :category, doing: 0, in_qa: 1, qa_pass: 2, accepted: 3
-
   has_many :cards
 
   before_save :reset_previous_category
+
+  categories.hash.each do |name, id|
+    define_singleton_method(name) { find_by(category_cd: id) }
+  end
 
   class << self
     def pull_lists
@@ -29,10 +33,6 @@ class List < ActiveRecord::Base
         acc[CATEGORY_DISPLAY_NAME[name]] = id
       end
     end
-  end
-
-  List.categories.hash.each do |name, id|
-    List.define_singleton_method(name) { find_by(category_cd: id) }
   end
 
   private

@@ -35,5 +35,9 @@ class Sprint < ActiveRecord::Base
       sprint = current_sprint
       (sprint.start_date..sprint.end_date)
     end
+
+    def current_sprint_name
+      current_sprint.name
+    end
   end
 end
