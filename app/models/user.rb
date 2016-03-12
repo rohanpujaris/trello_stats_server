@@ -8,7 +8,9 @@ class User < ActiveRecord::Base
   belongs_to :member
   has_many :sync_records
 
-  def create_sync_record(sync_type)
-    sync_records.create(category: sync_type, synced_time: Time.now)
+  def sync_record(sync_type)
+    sync_record = sync_records.create(sync_type: sync_type, sync_start_time: Time.now)
+    yield
+    sync_record.update_column(:sync_end_time, Time.now)
   end
 end

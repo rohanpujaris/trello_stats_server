@@ -5,7 +5,7 @@ module Api::V1
         data = Member.developers
         serializer = Api::V1::MemberSerializer
         meta = {
-          last_sync_time: SyncRecord.latest_sync_time(:all_data),
+          last_synced_time: SyncRecord.last_sync_end_time(:all_data),
           current_sprint_name: Sprint.current_sprint_name
         }
       else

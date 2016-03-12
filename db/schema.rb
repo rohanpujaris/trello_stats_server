@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160309132958) do
+ActiveRecord::Schema.define(version: 20160312073239) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -131,11 +131,12 @@ ActiveRecord::Schema.define(version: 20160309132958) do
   end
 
   create_table "sync_records", force: :cascade do |t|
-    t.time     "synced_time"
+    t.time     "sync_end_time"
     t.integer  "user_id"
-    t.integer  "category_cd", default: 0
-    t.datetime "created_at",              null: false
-    t.datetime "updated_at",              null: false
+    t.integer  "sync_type_cd",    default: 0
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.time     "sync_start_time"
   end
 
   add_index "sync_records", ["user_id"], name: "index_sync_records_on_user_id", using: :btree
