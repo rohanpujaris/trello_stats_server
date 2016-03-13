@@ -29,6 +29,7 @@ gem 'jbuilder', '~> 2.0'
 gem 'omniauth'
 
 gem 'pg'
+gem 'puma'
 
 gem 'rack-cors', :require => 'rack/cors'
 

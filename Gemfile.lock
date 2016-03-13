@@ -112,6 +112,7 @@ GEM
       rack (>= 1.0, < 3)
     orm_adapter (0.5.0)
     pg (0.18.4)
+    puma (3.1.0)
     rack (1.6.4)
     rack-cors (0.4.0)
     rack-test (0.6.3)
@@ -215,6 +216,7 @@ DEPENDENCIES
   jquery-rails
   omniauth
   pg
+  puma
   rack-cors
   rails (= 4.2.2)
   rails_12factor
