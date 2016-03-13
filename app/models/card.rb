@@ -2,7 +2,12 @@
 # Example of methods to be moved: points_partion_array, get_points_from_name etc
 
 class Card < ActiveRecord::Base
-  FILTER_PARAMS = ['list_ids', 'sprint_ids', 'member_ids']
+  FILTER_PARAMS = [:list_ids, :sprint_ids, :member_ids]
+
+  # Hash is in format filter name: scope name
+  QUICK_FILTERS = {
+    current_sprint_cards_witout_points: :current_sprint_cards_witout_points
+  }
 
   belongs_to :sprint
   belongs_to :list
@@ -29,18 +34,21 @@ class Card < ActiveRecord::Base
   scope :name_like, -> (term) { where('lower(name) like ?', "%#{term.downcase}%") }
   scope :list_id_equals, -> (list_ids) { where(list_id: list_ids) }
   scope :sprint_id_equals, -> (sprint_ids) { where(sprint_id: sprint_ids) }
+  scope :current_sprint, -> { sprint_id_equals(Sprint.current_sprint.id) }
+  scope :without_points, -> { where('points IS NULL') }
+  scope :current_sprint_cards_witout_points, -> { current_sprint.without_points }
 
   class << self
     def filters
       filters = {}
-      filters[:lists] = List.select(:id, :name)
-      filters[:sprints] = Sprint.select(:id, :name)
-      filters[:members] = Member.select("id, full_name as name")
+      filters['List Name'] = List.select(:id, :name)
+      filters['Sprint Label'] = Sprint.select(:id, :name)
+      filters['Member Name'] = Member.select("id, full_name as name")
       filters
     end
 
-    # This method doesn't belongs here. Find appropriate place
-    def filter_results(cards, filters)
+    def filter_results(filters)
+      cards = all
       filters.each do |filterType, filterIds|
         if filterType == 'list_ids'
           cards = cards.list_id_equals(filterIds)
@@ -51,6 +59,19 @@ class Card < ActiveRecord::Base
         if filterType == 'member_ids'
           cards = cards.where("members.id IN (?)", filterIds)
         end
+      end
+      cards
+    end
+
+    def apply_quick_filters(quick_filters)
+      cards = all
+      return cards if quick_filters.blank?
+      valid_quick_filters = QUICK_FILTERS.keys
+      if (valid_quick_filters.map(&:to_s) & quick_filters) != quick_filters
+        raise 'Invalid filters provided'
+      end
+      valid_quick_filters.each do |filter|
+        cards = cards.send(QUICK_FILTERS[filter])
       end
       cards
     end
