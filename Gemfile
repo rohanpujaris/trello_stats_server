@@ -1,5 +1,7 @@
 source 'https://rubygems.org'
 
+ruby "2.2.2"
+
 gem 'active_model_serializers', git: 'https://github.com/rails-api/active_model_serializers.git'
 gem 'daemons'
 gem 'delayed_job_active_record'
@@ -7,8 +9,7 @@ gem 'devise_token_auth'
 
 # Bundle edge Rails instead: gem 'rails', github: 'rails/rails'
 gem 'rails', '4.2.2'
-# Use sqlite3 as the database for Active Record
-gem 'sqlite3'
+
 # Use SCSS for stylesheets
 gem 'sass-rails', '~> 5.0'
 # Use Uglifier as compressor for JavaScript assets
@@ -30,6 +31,9 @@ gem 'omniauth'
 gem 'pg'
 
 gem 'rack-cors', :require => 'rack/cors'
+
+gem 'rails_12factor', group: :production
+
 gem 'ruby-trello'
 
 # bundle exec rake doc:rails generates the API under doc/api.
