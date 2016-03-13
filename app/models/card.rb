@@ -54,6 +54,21 @@ class Card < ActiveRecord::Base
       end
       cards
     end
+
+    def sync_with_trello_card(trello_card)
+      card = Card.find_or_create_by(trello_id: trello_card.id) do |card|
+        card.name = trello_card.name
+        card.short_url = trello_card.short_url
+        card.list = List.find_or_create_by(trello_id: trello_card.list_id) do |list|
+          trello_list = Trello::List.find(trello_card.list_id)
+          list.name = trello_list.name
+        end
+      end
+      card.save_or_update_sprint(trello_card.card_labels)
+      card.name != trello_card.name && card.update_attributes(name: trello_card.name)
+      card.save_or_update_list_association(trello_card.list_id)
+      card.save_card_member_association(trello_card.member_ids)
+    end
   end
 
   def save_or_update_sprint(card_labels)
