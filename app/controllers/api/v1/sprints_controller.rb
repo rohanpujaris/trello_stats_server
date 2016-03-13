@@ -1,5 +1,7 @@
 module Api::V1
   class SprintsController < BaseApiController
+    before_action -> { authenticate_role! role: :admin }
+
     def index
       render json: Sprint.all,
         each_serializer: Api::V1::SprintSerializer

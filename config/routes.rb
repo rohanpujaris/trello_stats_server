@@ -8,6 +8,7 @@ Rails.application.routes.draw do
       resources :card_members, only: [:update]
       resources :sprints, only: [:index, :update]
       resources :lists, only: [:index, :update]
+      resources :leaves, except: [:new, :edit]
 
       get "pull_all_data_from_trello", to: "pull_trello_data#pull_all_data"
       get "authenticate", to: "trello_auth#authenticate"

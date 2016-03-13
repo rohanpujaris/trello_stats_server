@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312073239) do
+ActiveRecord::Schema.define(version: 20160312153818) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -74,6 +74,17 @@ ActiveRecord::Schema.define(version: 20160312073239) do
     t.date   "date"
   end
 
+  create_table "leaves", force: :cascade do |t|
+    t.integer  "member_id"
+    t.integer  "creator_id"
+    t.date     "date"
+    t.datetime "created_at", null: false
+    t.datetime "updated_at", null: false
+  end
+
+  add_index "leaves", ["creator_id"], name: "index_leaves_on_creator_id", using: :btree
+  add_index "leaves", ["member_id"], name: "index_leaves_on_member_id", using: :btree
+
   create_table "lists", force: :cascade do |t|
     t.string   "name"
     t.integer  "category_cd"
@@ -131,12 +142,12 @@ ActiveRecord::Schema.define(version: 20160312073239) do
   end
 
   create_table "sync_records", force: :cascade do |t|
-    t.time     "sync_end_time"
     t.integer  "user_id"
     t.integer  "sync_type_cd",    default: 0
     t.datetime "created_at",                  null: false
     t.datetime "updated_at",                  null: false
-    t.time     "sync_start_time"
+    t.datetime "sync_start_time"
+    t.datetime "sync_end_time"
   end
 
   add_index "sync_records", ["user_id"], name: "index_sync_records_on_user_id", using: :btree
@@ -165,6 +176,7 @@ ActiveRecord::Schema.define(version: 20160312073239) do
     t.datetime "created_at"
     t.datetime "updated_at"
     t.integer  "member_id"
+    t.integer  "role_cd",                default: 0
   end
 
   add_index "users", ["email"], name: "index_users_on_email", using: :btree
@@ -177,6 +189,7 @@ ActiveRecord::Schema.define(version: 20160312073239) do
   add_foreign_key "card_sprints", "cards"
   add_foreign_key "card_sprints", "sprints"
   add_foreign_key "cards", "lists"
+  add_foreign_key "leaves", "members"
   add_foreign_key "member_leaves", "members"
   add_foreign_key "member_sprint_leaves", "members"
   add_foreign_key "member_sprint_leaves", "sprints"

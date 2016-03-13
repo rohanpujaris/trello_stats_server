@@ -1,5 +1,7 @@
 module Api::V1
   class ListsController < BaseApiController
+    before_action -> { authenticate_role! role: :admin }
+
     def index
       render json: List.order(category_cd: :asc,updated_at: :desc),
         each_serializer: Api::V1::ListSerializer,

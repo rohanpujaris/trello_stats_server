@@ -7,8 +7,8 @@ module Api::V1
         cards = cards.name_like(params[:search])
       end
       cards = Card.filter_results(cards, params.slice(*Card::FILTER_PARAMS))
-      render json: cards, include: '**',
-        each_serializer: Api::V1::CardSerializer,
+      render json: cards,
+        each_serializer: Api::V1::CardSerializer, include: '**',
         meta: { total_count: cards.count, filters: Card.filters }
     end
 

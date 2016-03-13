@@ -5,7 +5,8 @@ class Member < ActiveRecord::Base
   has_many :card_members
   has_many :cards, through: :card_members
   has_many :point_stats
-  has_many :member_leaves, class_name: 'MemberLeave'
+  has_many :leaves
+  has_many :created_leaves, class: 'Leave', foreign_key: 'creator_id'
 
 
   scope :id_equals, -> (member_ids) { where(id: member_ids) }
@@ -54,6 +55,6 @@ class Member < ActiveRecord::Base
   end
 
   def current_sprint_leaves
-    member_leaves.where("member_leaves.date": Sprint.current_sprint_date_range).count
+    leaves.where("leaves.date": Sprint.current_sprint_date_range).count
   end
 end
