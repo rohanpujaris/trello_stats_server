@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160312153818) do
+ActiveRecord::Schema.define(version: 20160313162238) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -48,6 +48,7 @@ ActiveRecord::Schema.define(version: 20160312153818) do
     t.integer  "sprint_id"
     t.integer  "point_expecctation"
     t.boolean  "points_manuallly_assigned", default: false
+    t.text     "short_url"
   end
 
   add_index "cards", ["list_id"], name: "index_cards_on_list_id", using: :btree
@@ -113,9 +114,9 @@ ActiveRecord::Schema.define(version: 20160312153818) do
     t.string   "full_name"
     t.string   "user_name"
     t.string   "trello_id"
-    t.datetime "created_at",      null: false
-    t.datetime "updated_at",      null: false
-    t.integer  "job_profile_cd"
+    t.datetime "created_at",                  null: false
+    t.datetime "updated_at",                  null: false
+    t.integer  "job_profile_cd",  default: 0
     t.integer  "expected_points"
   end
 

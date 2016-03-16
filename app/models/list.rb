@@ -20,7 +20,7 @@ class List < ActiveRecord::Base
     def pull_lists
       RvTrello.lists.each do |trello_list|
         unless list = find_by(trello_id: trello_list.id)
-          list = List.new(trello_id: trello_list.i)
+          list = List.new(trello_id: trello_list.id)
         end
         list.name = trello_list.name
         list.save
