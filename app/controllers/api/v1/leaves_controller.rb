@@ -29,6 +29,14 @@ module Api::V1
       end
     end
 
+    def destroy
+      if Leave.find(params[:id]).destroy
+        render json: generate_msg_json('Leave deletion successfull')
+      else
+        render json: generate_error_json('Something went wrong'), status: 422
+      end
+    end
+
     private
 
     def leave_params

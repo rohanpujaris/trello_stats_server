@@ -3,4 +3,5 @@ class Leave < ActiveRecord::Base
   belongs_to :creator, class_name: 'Member'
 
   validates :member, presence: true
+  validates :date, presence: true
 end
