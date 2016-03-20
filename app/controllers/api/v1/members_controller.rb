@@ -43,8 +43,9 @@ module Api::V1
     private
 
     def member_params
-      params.require(:data).permit(attributes:
-        [:full_name, :user_name, :expected_points, :job_profile])
+      permitted_params = [:full_name, :user_name, :expected_points, :job_profile]
+      permitted_params.push(:role) if current_user.admin?
+      params.require(:data).permit(attributes: permitted_params)
     end
   end
 end
