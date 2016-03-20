@@ -26,8 +26,8 @@ module Api::V1
       {meta: hash}
     end
 
-    def authenticate_role!(options)
-      if current_user.role != options[:role]
+    def authenticate_role!(roles)
+      if roles.exclude?(current_user.role)
         render json: generate_error_json('Access Denied'), status: 401
       end
     end

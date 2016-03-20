@@ -1,5 +1,7 @@
 class Member < ActiveRecord::Base
   as_enum :job_profile, developer: 0, tester: 1, others: 2
+  as_enum :role, normal_user: 0, team_lead: 1, admin: 2
+
 
   has_one  :user
   has_many :card_members
@@ -8,10 +10,13 @@ class Member < ActiveRecord::Base
   has_many :leaves, -> { merge(Leave.default_scoped) }
   has_many :leaves_updated_by_member, class: 'Leave', foreign_key: 'last_updated_by'
 
-
   scope :id_equals, -> (member_ids) { where(id: member_ids) }
 
   default_scope { order(:full_name) }
+
+  def admin_or_team_lead?
+    admin? || team_lead?
+  end
 
   class << self
     def save_member_to_db

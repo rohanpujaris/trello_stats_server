@@ -1,5 +1,7 @@
 module Api::V1
   class MembersController < BaseApiController
+    before_action -> { authenticate_role! [:team_lead, :admin] }, only: [:update]
+
     def index
       if params[:point_stats] == 'true'
         data = Member.developers
@@ -11,7 +13,10 @@ module Api::V1
       else
         data = Member.all
         serializer = Api::V1::MemberWithoutPointsSerializer
-        meta = { job_profiles: Member.job_profiles.hash }
+        meta = {
+          job_profiles: Member.job_profiles.hash,
+          roles: Member.roles.hash
+        }
       end
       render json: data, each_serializer: serializer, meta: meta
     end
@@ -27,10 +32,10 @@ module Api::V1
 
     def leaves
       if current_user.admin_or_team_lead?
-        render json: Member.all.includes(:leaves),
+        render json: Member.all.includes(leaves: [:member, :last_updated_by]),
           each_serializer: Api::V1::MemberLeaveSerializer, include: '**'
       else
-        render json: current_user.leaves,
+        render json: current_user.leaves.includes(:member, :last_updated_by),
           each_serializer: Api::V1::LeaveSerializer, include: '**'
       end
     end

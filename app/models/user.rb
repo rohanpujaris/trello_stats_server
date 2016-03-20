@@ -5,8 +5,6 @@ class User < ActiveRecord::Base
           :recoverable, :rememberable, :trackable, :validatable,
           :confirmable, :omniauthable
 
-  as_enum :role, normal_user: 0, team_lead: 1, admin: 2
-
   include DeviseTokenAuth::Concerns::User
 
   belongs_to :member
@@ -14,9 +12,8 @@ class User < ActiveRecord::Base
   has_many :leaves, through: :member
   has_many :leaves_updated_by_member, through: :member
 
-  def admin_or_team_lead?
-    admin? || team_lead?
-  end
+  delegate :role, :role_cd, :admin?, :team_lead?, :admin_or_team_lead?,
+     to: :member, allow_nil: true
 
   def sync_record(sync_type)
     sync_record = sync_records.create(sync_type: sync_type, sync_start_time: Time.now)
