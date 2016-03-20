@@ -25,6 +25,16 @@ module Api::V1
       end
     end
 
+    def leaves
+      if current_user.admin_or_team_lead?
+        render json: Member.all.includes(:leaves),
+          each_serializer: Api::V1::MemberLeaveSerializer, include: '**'
+      else
+        render json: current_user.leaves,
+          each_serializer: Api::V1::LeaveSerializer, include: '**'
+      end
+    end
+
     private
 
     def member_params

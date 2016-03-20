@@ -1,17 +1,31 @@
 module Api::V1
   class LeavesController < BaseApiController
-    def index
-      render json: current_user.admin? ? Leave.all : current_user.leaves,
-        each_serializer: Api::V1::LeaveSerializer, include: '**'
-    end
+
+    # TODO: leaves action will be shifted here as a index action
+
+    # def index
+    #   meta = {}
+    #   if current_user.admin_or_team_lead?
+    #     meta = { members: Member.select(:id, :full_name).as_json }
+    #     leaves = ActiveModel::SerializableResource.new(Leave.all).as_json
+    #     members = ActiveModel::SerializableResource.new(Member.all).as_json['']
+    #     leaves['data'].concat()
+    #   else
+    #   end
+    #   leaves = ActiveModel::SerializableResource.new(
+    #     Member.limit(2),
+    #     {each_serializer: Api::V1::MemberSerializer}).as_json
+    #   render json: current_user.admin? ? Leave.all : current_user.leaves,
+    #     each_serializer: Api::V1::LeaveSerializer, meta: meta, include: '**'
+    # end
 
     def create
-      leave = if current_user.admin?
+      leave = if current_user.admin_or_team_lead?
         Leave.create(leave_params)
       else
-        current_user.leaves.create(leave_params)
+        current_user.member.leaves.create(leave_params)
       end
-      if leaves.valid?
+      if leave.valid?
         render json: leave, serializer: Api::V1::LeaveSerializer
       else
         render json: leave.json_api_format_errors, status: 422
@@ -20,17 +34,24 @@ module Api::V1
 
     def update
       leave = Leave.find(params[:data][:id])
-      if !(current_user.admin? || leave.member_id == current_user.member_id)
+
+      # TODO: add cancancan gem for handlin access control or refactor
+      if !(current_user.admin_or_team_lead? || leave.member_id == current_user.member_id)
         render json: generate_error_json('Access Denied'), status: 401
       elsif leave.update_attributes(leave_params)
-        render json: sprint, serializer: Api::V1::LeaveSerializer
+        render json: leave, serializer: Api::V1::LeaveSerializer
       else
-        render json: sprint.json_api_format_errors, status: 422
+        render json: leave.json_api_format_errors, status: 422
       end
     end
 
     def destroy
-      if Leave.find(params[:id]).destroy
+      leave = Leave.find(params[:id])
+
+      # TODO: add cancancan gem for handlin access control or refactor
+      if !(current_user.admin_or_team_lead? || leave.member_id == current_user.member_id)
+        render json: generate_error_json('Access Denied'), status: 401
+      elsif leave.destroy
         render json: generate_msg_json('Leave deletion successfull')
       else
         render json: generate_error_json('Something went wrong'), status: 422
@@ -40,12 +61,22 @@ module Api::V1
     private
 
     def leave_params
-      allowed_attribute = current_user.admin? ? [:id, :member_id, :date] : [:id, :date]
-      params.require(:data).permit(attributes: allowed_attribute).merge!(addition_params)
-    end
-
-    def addition_params
-      { creator_id: current_user.id }
+      if current_user.admin_or_team_lead?
+        permitted_params = params.require(:data).permit(
+          attributes: [:id, :member_id, :date, :creator_id],
+          relationships: {member: {data: [:id, :type]}}
+        )
+        permitted_params[:attributes].merge!(
+          last_updated_by_id: current_user.member_id,
+          member_id: params[:data][:relationships][:member][:data][:id]
+        )
+      else
+         permitted_params = params.require(:data).permit(attributes: [:id, :date])
+        permitted_params[:attributes].merge!(
+          last_updated_by_id: current_user.member_id,
+          member_id: current_user.member_id
+        )
+      end
     end
   end
 end

@@ -3,7 +3,9 @@ Rails.application.routes.draw do
 
   namespace :api, defaults: { format: "json" }  do
     namespace :v1 do
-      resources :members, only: [:index, :update]
+      resources :members, only: [:index, :update] do
+        get 'leaves', on: :collection
+      end
       resources :cards, only: [:index]
       resources :card_members, only: [:update]
       resources :sprints, only: [:index, :update]

@@ -12,7 +12,11 @@ class User < ActiveRecord::Base
   belongs_to :member
   has_many :sync_records
   has_many :leaves, through: :member
-  has_many :created_leaves, through: :member
+  has_many :leaves_updated_by_member, through: :member
+
+  def admin_or_team_lead?
+    admin? || team_lead?
+  end
 
   def sync_record(sync_type)
     sync_record = sync_records.create(sync_type: sync_type, sync_start_time: Time.now)
@@ -29,7 +33,8 @@ class User < ActiveRecord::Base
       'client'       => client_id,
       'expiry'       => expiry.to_s,
       'uid'          => self.uid,
-      'user-role'         => self.role.to_s
+      'user-role'    => self.role.to_s,
+      'member-id'    => self.member_id
     }
   end
 end

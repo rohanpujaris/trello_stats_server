@@ -5,8 +5,8 @@ class Member < ActiveRecord::Base
   has_many :card_members
   has_many :cards, through: :card_members
   has_many :point_stats
-  has_many :leaves
-  has_many :created_leaves, class: 'Leave', foreign_key: 'creator_id'
+  has_many :leaves, -> { merge(Leave.default_scoped) }
+  has_many :leaves_updated_by_member, class: 'Leave', foreign_key: 'last_updated_by'
 
 
   scope :id_equals, -> (member_ids) { where(id: member_ids) }

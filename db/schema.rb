@@ -11,7 +11,7 @@
 #
 # It's strongly recommended that you check this file into your version control system.
 
-ActiveRecord::Schema.define(version: 20160313162238) do
+ActiveRecord::Schema.define(version: 20160320143002) do
 
   # These are extensions that must be enabled in order to support this database
   enable_extension "plpgsql"
@@ -77,13 +77,13 @@ ActiveRecord::Schema.define(version: 20160313162238) do
 
   create_table "leaves", force: :cascade do |t|
     t.integer  "member_id"
-    t.integer  "creator_id"
+    t.integer  "last_updated_by_id"
     t.date     "date"
-    t.datetime "created_at", null: false
-    t.datetime "updated_at", null: false
+    t.datetime "created_at",         null: false
+    t.datetime "updated_at",         null: false
   end
 
-  add_index "leaves", ["creator_id"], name: "index_leaves_on_creator_id", using: :btree
+  add_index "leaves", ["last_updated_by_id"], name: "index_leaves_on_last_updated_by_id", using: :btree
   add_index "leaves", ["member_id"], name: "index_leaves_on_member_id", using: :btree
 
   create_table "lists", force: :cascade do |t|
