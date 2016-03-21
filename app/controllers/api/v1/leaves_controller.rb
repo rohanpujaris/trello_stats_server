@@ -1,23 +1,10 @@
 module Api::V1
   class LeavesController < BaseApiController
-
-    # TODO: leaves action will be shifted here as a index action
-
-    # def index
-    #   meta = {}
-    #   if current_user.admin_or_team_lead?
-    #     meta = { members: Member.select(:id, :full_name).as_json }
-    #     leaves = ActiveModel::SerializableResource.new(Leave.all).as_json
-    #     members = ActiveModel::SerializableResource.new(Member.all).as_json['']
-    #     leaves['data'].concat()
-    #   else
-    #   end
-    #   leaves = ActiveModel::SerializableResource.new(
-    #     Member.limit(2),
-    #     {each_serializer: Api::V1::MemberSerializer}).as_json
-    #   render json: current_user.admin? ? Leave.all : current_user.leaves,
-    #     each_serializer: Api::V1::LeaveSerializer, meta: meta, include: '**'
-    # end
+    def index
+      leaves = current_user.admin_or_team_lead? ? Leave.all : current_user.leaves
+      render json: leaves.includes(:member, :last_updated_by),
+        each_serializer: Api::V1::LeaveSerializer, include: '**'
+    end
 
     def create
       leave = if current_user.admin_or_team_lead?
