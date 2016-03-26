@@ -1,4 +1,6 @@
 class Holiday < ActiveRecord::Base
+  validates :name, :date, presence: true
+
   class << self
     def holidays_in_current_sprint
       current_sprint = Sprint.current_sprint
