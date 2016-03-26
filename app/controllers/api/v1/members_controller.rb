@@ -1,5 +1,7 @@
 module Api::V1
   class MembersController < BaseApiController
+    before_action -> { authenticate_role! [:team_lead, :admin] }, only: [:update]
+
     def index
       if params[:point_stats] == 'true'
         data = Member.developers
@@ -11,7 +13,10 @@ module Api::V1
       else
         data = Member.all
         serializer = Api::V1::MemberWithoutPointsSerializer
-        meta = { job_profiles: Member.job_profiles.hash }
+        meta = {
+          job_profiles: Member.job_profiles.hash,
+          roles: Member.roles.hash
+        }
       end
       render json: data, each_serializer: serializer, meta: meta
     end
@@ -28,8 +33,9 @@ module Api::V1
     private
 
     def member_params
-      params.require(:data).permit(attributes:
-        [:full_name, :user_name, :expected_points, :job_profile])
+      permitted_params = [:full_name, :user_name, :expected_points, :job_profile]
+      permitted_params.push(:role) if current_user.admin?
+      params.require(:data).permit(attributes: permitted_params)
     end
   end
 end

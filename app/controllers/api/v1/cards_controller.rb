@@ -6,10 +6,10 @@ module Api::V1
       if params[:search].present?
         cards = cards.name_like(params[:search])
       end
-      cards = cards.apply_quick_filters(params[:quick_filters])
       cards = cards.filter_results(params.slice(*Card::FILTER_PARAMS))
-      render json: cards, include: '**',
-        each_serializer: Api::V1::CardSerializer,
+      cards = cards.apply_quick_filters(params[:quick_filters])
+      render json: cards,
+        each_serializer: Api::V1::CardSerializer, include: '**',
         meta: { total_count: cards.count, filters: Card.filters }
     end
 
